@@ -1,0 +1,11 @@
+한눈팔기 — 여기에 파일을 넣으세요
+
+고양이 사진 → assets/photos/cats/
+강아지 사진 → assets/photos/dogs/
+바탕에 흩뿌릴 사진 → assets/photos/misc/
+독 아이콘 4개 → assets/icons/dock/  (email, memo, music, instagram)
+Cat/Dog 폴더 아이콘 → assets/icons/folders/
+음악 → assets/music/
+
+이메일: sommsomaj@gmail.com
+인스타: https://www.instagram.com/_sommsoma/

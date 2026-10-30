@@ -1,0 +1,836 @@
+/* íëíê¸° â 1920Ã1080 artboard */
+
+@font-face {
+  font-family: "Neue Haas Grotesk Text Pro";
+  src:
+    local("Neue Haas Grotesk Text Pro"),
+    local("NHaasGroteskTXPro-55Rg"),
+    url("../assets/fonts/NeueHaasGroteskText-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk Text Pro";
+  src:
+    local("Neue Haas Grotesk Text Pro Medium"),
+    local("NHaasGroteskTXPro-65Md"),
+    url("../assets/fonts/NeueHaasGroteskText-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk Text Pro";
+  src:
+    local("Neue Haas Grotesk Text Pro Bold"),
+    local("NHaasGroteskTXPro-75Bd"),
+    url("../assets/fonts/NeueHaasGroteskText-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk Text Pro";
+  src:
+    local("Neue Haas Grotesk Text Pro Italic"),
+    url("../assets/fonts/NeueHaasGroteskText-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk Text Pro";
+  src:
+    local("Neue Haas Grotesk Text Pro Medium Italic"),
+    url("../assets/fonts/NeueHaasGroteskText-MedIta.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk Text Pro";
+  src:
+    local("Neue Haas Grotesk Text Pro Bold Italic"),
+    url("../assets/fonts/NeueHaasGroteskText-BoldIta.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --bg-desk: #e8fefa;
+  --bg-lime: #e8fefa;
+  --ink: #000000;
+  --memo-bg: #fff9a8;
+  --memo-bar: #f0e878;
+  /* Stack: folders ? photos ? windows ? status ? dock */
+  --folder-z: 5;
+  --photos-z: 10;
+  --desktop-z: 50;
+  --dock-z: 200;
+  --status-z: 180;
+  --window-z: 300;
+  --memo-z: 300;
+  --font: "Neue Haas Grotesk Text Pro", "Neue Haas Grotesk Text", sans-serif;
+  --stage-scale: 1;
+  --status-size: 30px;
+  --status-weight: 400;
+  --status-line: 37px;
+  --status-tracking: 0;
+  --label-size: 20px;
+  --label-weight: 400;
+  --label-line: 24px;
+  --label-tracking: 0;
+  --label-box-width: 75px;
+  --label-box-height: 24px;
+  --artboard-w: 1920px;
+  --artboard-h: 1080px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-desk);
+  font-family: var(--font);
+  font-weight: 400;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Full-viewport stage -- clips artboard so transform scale cannot create document scroll */
+.stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-desk);
+}
+
+/* Figma Home 1920x1080 -- JS: translate(-50%,-50%) scale(min(vw/1920, vh/1080)) */
+.artboard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--artboard-w);
+  height: var(--artboard-h);
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.artboard > * {
+  pointer-events: auto;
+}
+
+/* Folders alone on lowest interactive artboard (below #photos) */
+.folders-layer {
+  z-index: var(--folder-z);
+  overflow: visible;
+}
+
+/* Windows artboard above photos */
+.desktop {
+  z-index: var(--desktop-z);
+}
+
+/* Status hugs viewport edges (outside centered artboard); type scales with --stage-scale */
+.status {
+  position: absolute;
+  inset: 0;
+  z-index: var(--status-z);
+  pointer-events: none;
+}
+
+.status-date {
+  position: absolute;
+  display: inline-block;
+  width: max-content;
+  left: calc(18px * var(--stage-scale));
+  top: calc(18px * var(--stage-scale));
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
+  font-style: normal;
+  font-weight: var(--status-weight);
+  font-size: calc(var(--status-size) * var(--stage-scale));
+  line-height: calc(var(--status-line) * var(--stage-scale));
+  letter-spacing: var(--status-tracking);
+  text-align: left;
+  color: #000000;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: visible;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
+.status-time {
+  position: absolute;
+  display: inline-block;
+  width: max-content;
+  right: calc(23px * var(--stage-scale));
+  top: calc(19px * var(--stage-scale));
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
+  font-style: normal;
+  font-weight: var(--status-weight);
+  font-size: calc(var(--status-size) * var(--stage-scale));
+  line-height: calc(var(--status-line) * var(--stage-scale));
+  letter-spacing: var(--status-tracking);
+  text-align: right;
+  color: #000000;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: visible;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
+/* Scattered photos — full viewport layer (spreads with browser width) */
+.photos {
+  position: absolute;
+  inset: 0;
+  z-index: var(--photos-z);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+
+.photo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  will-change: transform;
+  transform-origin: center center;
+  pointer-events: auto;
+}
+
+.photo.is-dragging {
+  cursor: grabbing;
+  opacity: 0.96;
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.photo.is-gone {
+  display: none !important;
+}
+
+/* Center folders (stacking owned by .folders-layer) */
+.folders {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.folder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13.15px;
+  width: 69px;
+  pointer-events: auto;
+  cursor: default;
+  transition: transform 0.12s ease;
+}
+
+.folder.is-drop-target {
+  transform: scale(1.08);
+}
+
+.folder-icon {
+  width: 69px;
+  height: 52.85px;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(10px 10px 85px rgba(0, 0, 0, 0.2));
+}
+
+.folder-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--label-box-width);
+  height: var(--label-box-height);
+  margin: 0;
+  font-family: var(--font);
+  font-style: normal;
+  font-weight: var(--label-weight);
+  font-size: var(--label-size);
+  line-height: var(--label-line);
+  letter-spacing: var(--label-tracking);
+  text-align: center;
+  color: #000000;
+}
+
+
+/* Dock — viewport bottom, scaled with --stage-scale */
+.dock {
+  position: absolute;
+  left: 50%;
+  bottom: calc(15px * var(--stage-scale));
+  top: auto;
+  width: 298px;
+  height: 73.84px;
+  margin: 0;
+  transform: translateX(-50%) scale(var(--stage-scale));
+  transform-origin: center bottom;
+  z-index: var(--dock-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  background: rgba(218, 218, 218, 0.6);
+  box-shadow: 0px 2.06px 2.06px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10.82px);
+  -webkit-backdrop-filter: blur(10.82px);
+  border-radius: 17.99px;
+  border: none;
+  pointer-events: auto;
+}
+
+/* Icon row  scaled with midway dock */
+.dock-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 0;
+  gap: 22.05px;
+  position: relative;
+  width: 260.3px;
+  height: 48.4px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.dock-item {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  flex: none;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-radius: 9.79px;
+  overflow: hidden;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  transition: transform 0.12s ease;
+  box-sizing: border-box;
+}
+
+.dock-item:hover,
+.dock-item:focus-visible {
+  transform: translateY(-2px) scale(1.04);
+  outline: none;
+}
+
+.dock-item:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.dock-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+#dock-email {
+  order: 0;
+  width: 48.94px;
+  height: 48.94px;
+  border-radius: 9.79px;
+}
+
+#dock-memo {
+  order: 1;
+  width: 46.94px;
+  height: 46.94px;
+  /* Sticky-note asset as-is -- do not inherit dock-item rounded plate clip */
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+#dock-memo img {
+  border-radius: 0;
+  object-fit: contain;
+}
+
+#dock-music {
+  order: 2;
+  width: 48.94px;
+  height: 48.94px;
+  border-radius: 9.79px;
+  flex: none;
+  flex-grow: 0;
+}
+
+#dock-instagram {
+  order: 3;
+  width: 48.37px;
+  height: 48.37px;
+}
+
+.dock-item.is-playing {
+  box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.18);
+}
+
+
+/* ---- Memo app (Figma Copy-as-CSS) ---- */
+.memo-window {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--memo-z);
+  width: 1001px;
+  height: 565px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  /* Same shadow as .folder-window-chrome (Safari Browser) */
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.7),
+    0px 20px 30px rgba(0, 0, 0, 0.3),
+    0px 10px 50px rgba(0, 0, 0, 0.2);
+  filter: none;
+  font-family: var(--font);
+}
+
+.memo-window[hidden] {
+  display: none !important;
+}
+
+.memo-sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 234px;
+  margin: 0;
+  padding: 0;
+  background: #ffffcb;
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+  cursor: grab;
+}
+
+.memo-window.is-dragging .memo-sidebar,
+.folder-window.is-dragging .folder-window-titlebar {
+  cursor: grabbing;
+}
+
+.memo-sidebar:active {
+  cursor: grabbing;
+}
+
+/* Shared chrome control � X and + stay identical size/weight */
+.memo-close,
+.memo-new {
+  appearance: none;
+  position: absolute;
+  top: 6px;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #4c4c4c;
+}
+
+.memo-close {
+  left: 6px;
+}
+
+.memo-new {
+  right: 6px;
+}
+
+.memo-close:hover,
+.memo-new:hover {
+  background: transparent;
+  opacity: 0.75;
+}
+
+.memo-close svg,
+.memo-new svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.memo-sidebar-list {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.memo-sidebar-item {
+  appearance: none;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 199px;
+  margin: 0;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-family: var(--font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.08px;
+  color: #434343;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.memo-sidebar-item.is-active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.memo-frame {
+  position: absolute;
+  left: 234px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  padding: 36px 27px 28px;
+  box-sizing: border-box;
+}
+
+.memo-body {
+  display: block;
+  width: 713px;
+  max-width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  resize: none;
+  background: transparent;
+  font-family: var(--font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0;
+  color: #000000;
+  outline: none;
+  box-shadow: none;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Mobile overrides disabled: artboard scales as a whole (1920Ã1080). */
+
+
+/* ââ Folder / photo Browser windows (desktop stacking) ââ */
+.folder-window {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1280px;
+  height: 784px;
+  margin: 0;
+  z-index: var(--window-z);
+  pointer-events: auto;
+}
+
+.folder-window[hidden] {
+  display: none !important;
+}
+
+.folder-window-chrome {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.7),
+    0px 20px 30px rgba(0, 0, 0, 0.3),
+    0px 10px 50px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.folder-window-titlebar {
+  position: absolute;
+  height: 44px;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: #eaffc2;
+  box-shadow:
+    0px 0.5px 0px rgba(0, 0, 0, 0.15),
+    inset 0px -0.5px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 10px 10px 0 0;
+  box-sizing: border-box;
+  z-index: 2;
+  cursor: grab;
+}
+
+.folder-window-titlebar:active {
+  cursor: grabbing;
+}
+
+.folder-window-x {
+  appearance: none;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+.folder-window-x:focus {
+  outline: none;
+}
+
+.folder-window-x:focus-visible {
+  outline: 1px dotted rgba(76, 76, 76, 0.45);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.folder-window-x svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.folder-traffic {
+  display: none !important;
+  visibility: hidden;
+}
+
+.folder-window-title {
+  position: absolute;
+  left: 50%;
+  top: 11px;
+  transform: translateX(-50%);
+  width: auto;
+  min-width: 34px;
+  font-family: "Neue Haas Grotesk Text Pro", "Neue Haas Grotesk Text", sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  color: #6e6e6e;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.folder-window-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44px;
+  bottom: 0;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.folder-window-grid {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 14px;
+  align-content: start;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.folder-window-grid .folder-thumb {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.folder-window-grid .folder-thumb:focus-visible {
+  outline: 1px dotted rgba(76, 76, 76, 0.45);
+  outline-offset: 2px;
+}
+
+.folder-window-grid .folder-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+/* Solo photo viewer â same Browser chrome; offset so it can sit beside folder */
+.photo-viewer {
+  z-index: var(--window-z);
+  left: 56%;
+  top: 46%;
+}
+
+.photo-viewer-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.photo-viewer-img {
+  flex: 1 1 auto;
+  max-width: calc(100% - 96px);
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.photo-viewer-nav {
+  appearance: none;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(234, 255, 194, 0.95);
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.35),
+    0px 2px 6px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: #4c4c4c;
+  z-index: 2;
+}
+
+.photo-viewer-nav:hover {
+  background: #eaffc2;
+}
+
+.photo-viewer-nav:focus {
+  outline: none;
+}
+
+.photo-viewer-nav:focus-visible {
+  outline: 1px dotted rgba(76, 76, 76, 0.45);
+  outline-offset: 3px;
+}
+
+.photo-viewer-nav svg {
+  display: block;
+  pointer-events: none;
+}
+
+.photo-viewer-nav[hidden] {
+  display: none !important;
+}
